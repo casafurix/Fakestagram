@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "159752910392",
+    "project_id": "fakestagram-5645a",
+    "storage_bucket": "fakestagram-5645a.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:159752910392:android:826bc1531f2dc71dccd8cd",
+        "android_client_info": {
+          "package_name": "com.casafurix.fakestagram"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "159752910392-sn2f51b5f8666mptkichdb8f6f54umsn.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA3o1SZsWTzNlo85LQmZHEovIA4quBhdQA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "159752910392-sn2f51b5f8666mptkichdb8f6f54umsn.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
