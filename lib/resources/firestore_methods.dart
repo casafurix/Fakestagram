@@ -74,7 +74,20 @@ class FirestoreMethods {
         print('Empty text..');
       }
     } catch (e) {
-      print(e.toString());
+      print(
+        e.toString(),
+      );
+    }
+  }
+
+  //deleting post
+  Future<void> deletePost(String postID) async {
+    try {
+      await _firestore.collection('posts').doc('postID').delete();
+    } catch (err) {
+      print(
+        err.toString(),
+      );
     }
   }
 }

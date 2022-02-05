@@ -1,9 +1,11 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:instagram_flutter/models/user.dart';
 import 'package:instagram_flutter/providers/user_provider.dart';
 import 'package:instagram_flutter/resources/firestore_methods.dart';
 import 'package:instagram_flutter/screens/comment_screen.dart';
 import 'package:instagram_flutter/utils/colors.dart';
+import 'package:instagram_flutter/utils/utils.dart';
 import 'package:instagram_flutter/widgets/like_animation.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
@@ -18,6 +20,31 @@ class PostCard extends StatefulWidget {
 
 class _PostCardState extends State<PostCard> {
   bool isLikeAnimating = false;
+  int commentLength = 0;
+
+  @override
+  void initState() {
+    super.initState();
+    getComments();
+  }
+
+  void getComments() async {
+    try {
+      QuerySnapshot snap = await FirebaseFirestore.instance
+          .collection('posts')
+          .doc(widget.snap['postID'])
+          .collection('comments')
+          .get();
+
+      commentLength = snap.docs.length;
+    } catch (e) {
+      print(
+        showSnackBar(e.toString(), context),
+      );
+    }
+    setState(() {});
+  }
+
   @override
   Widget build(BuildContext context) {
     final User user = Provider.of<UserProvider>(context).getUser;
@@ -68,7 +95,11 @@ class _PostCardState extends State<PostCard> {
                           ]
                               .map(
                                 (e) => InkWell(
-                                  onTap: () {},
+                                  onTap: () async {
+                                    FirestoreMethods()
+                                        .deletePost(widget.snap['postID']);
+                                    Navigator.of(context).pop();
+                                  },
                                   child: Container(
                                     padding: const EdgeInsets.symmetric(
                                         vertical: 12, horizontal: 16),
@@ -193,10 +224,15 @@ class _PostCardState extends State<PostCard> {
                       .textTheme
                       .subtitle2!
                       .copyWith(fontWeight: FontWeight.w800),
-                  child: Text(
-                    '${widget.snap['likes'].length} like(s)',
-                    style: Theme.of(context).textTheme.bodyText2,
-                  ),
+                  child: widget.snap['likes'].length == 1
+                      ? Text(
+                          '${widget.snap['likes'].length} like',
+                          style: Theme.of(context).textTheme.bodyText2,
+                        )
+                      : Text(
+                          '${widget.snap['likes'].length} likes',
+                          style: Theme.of(context).textTheme.bodyText2,
+                        ),
                 ),
                 Container(
                   width: double.infinity,
@@ -222,13 +258,39 @@ class _PostCardState extends State<PostCard> {
                   onTap: () {},
                   child: Container(
                     padding: const EdgeInsets.symmetric(vertical: 4),
-                    child: Text(
-                      'View all 69 comments',
-                      style: TextStyle(
-                        fontSize: 16,
-                        color: secondaryColor,
-                      ),
-                    ),
+                    // child: if(commentLength == 0){
+                    //   Text('No comments yet', style: TextStyle(
+                    //           fontSize: 16,
+                    //           color: secondaryColor,
+                    //         ),);
+                    // } else if(commentLength == 1){
+                    //     Text('View $commentLength comment',style: TextStyle(
+                    //           fontSize: 16,
+                    //           color: secondaryColor,
+                    //         ),);
+                    // } else{
+                    //         Text('View all $commentLength comments',
+                    //         style: TextStyle(
+                    //           fontSize: 16,
+                    //           color: secondaryColor,
+                    //         ),
+                    //       );
+                    // }
+                    child: commentLength == 1
+                        ? Text(
+                            'View $commentLength comment',
+                            style: TextStyle(
+                              fontSize: 16,
+                              color: secondaryColor,
+                            ),
+                          )
+                        : Text(
+                            'View all $commentLength comments',
+                            style: TextStyle(
+                              fontSize: 16,
+                              color: secondaryColor,
+                            ),
+                          ),
                   ),
                 ),
                 Container(
